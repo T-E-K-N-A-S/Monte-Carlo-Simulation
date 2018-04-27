@@ -46,7 +46,7 @@ int monte_carlo_simulation(void)
 	SpinMat << "i" << "\t" << "j" << "\t" << "spin[i][j]" << endl;
 	LogFile.open("mylog_4.txt");
 	file.open("magnat.csv");
-	int flips = 0;
+	int st_flips = 0,pr_flips=0,rejec=0;
 	iseed = 5;
 	int mag2 = 0;
 
@@ -88,7 +88,7 @@ int monte_carlo_simulation(void)
 		LogFile << endl;
 		LogFile << "kconfig" << "\t" << "temp" << "\t" << "\t" << "mag / NS" << "\t" << "toten" << endl;
 
-	
+		st_flips = 0; pr_flips = 0, rejec = 0;
 		//cout << endl;
 		for (itemp = 0; itemp < TEMP; itemp++)
 		{
@@ -97,8 +97,8 @@ int monte_carlo_simulation(void)
 			
 			temp = temprature[itemp];
 			beta = 1 / temp;
-			tot_en= 0;
-
+			//tot_en= 0;
+			st_flips = 0; pr_flips = 0, rejec = 0;// , tot_en = 0;
 			/***************************        Monte Carlo Simulation      *****************************/
 			for (imeas = 0; imeas < MEAS; imeas++)
 
@@ -114,32 +114,27 @@ int monte_carlo_simulation(void)
 						i_c = rand_lattice_pt.first;
 						j_c = rand_lattice_pt.second;
 						//cout << "i-> " << i_c << " j-> " << j_c << "\n";
-						// metropolis algorithm // to min use -2 and to max use +2 in below eqn
-						//delta_site_energy = -2*site_energy[i_c][j_c]; //- (-phi[i_c][j_c] - (spin[i_c + 1][j_c] + spin[i_c - 1][j_c] + spin[i_c][j_c - 1] + spin[i_c][j_c + 1]));
-						//+phi[i][j] * spin[i][j] + spin[i][j] * (spin[i + 1][j] + spin[i - 1][j] + spin[i][j - 1] + spin[i][j + 1])-(-phi[i][j] * spin[i][j] - spin[i][j] * (spin[i + 1][j] + spin[i - 1][j] + spin[i][j - 1] + spin[i][j + 1]))
-						//old, delta_site_energy = 2 * spin[i_c][j_c] * (spin[i_c + 1][j_c] + spin[i_c - 1][j_c] + spin[i_c][j_c + 1] + spin[i_c][j_c - 1]) - 2 * phi[i_c][j_c] * spin[i_c][j_c];
-						// if you didnt wanted to use site_energy then why the fuck you introduced site_energy
-
+		
 						delta_site_energy =  -2 * energy_after_flip(spin,phi,i_c,j_c);
-						//cout << "delt en "<<delta_site_energy << endl;
 						if (delta_site_energy <= 0) // straight acceptance
 						{
 							//cout << "strt acceptance " << delta_site_energy << endl;
 							tot_en += delta_site_energy;
 							flip(spin, i_c, j_c);
-							//site_energy = update_HE(phi, i_c, j_c, site_energy, spin);	// update site energy
-							flips++;
-
+							st_flips++;
+							//cout<< "\t tot_en: " << tot_en << "," << cal_total_energy(spin, phi) << endl;
 						}
 						else
 						{
-							tot_en += metropolis(spin,delta_site_energy,beta,i_c,j_c);
+							tot_en += metropolis(spin,delta_site_energy,beta,i_c,j_c,pr_flips,rejec);
 							/* run metropolis algo */		
 							//cout << "prob acceptance " << delta_site_energy << endl;
+							//cout<< "\t tot_en: " << tot_en << "," << cal_total_energy(spin, phi) << endl;
 						}
 						//cout << "total energy\t" << tot_en << endl;
 
 					}//cout << "total energy\t" << tot_en << endl;
+					//system("pause");
 				}
 				//print_mat(spin,N);
 				mag = 0;
@@ -161,11 +156,12 @@ int monte_carlo_simulation(void)
 				f400 << endl;
 				f400.close();
 
-				/*cout << "\ntemp: "<<temp<<endl;
-				print_sign_mat(spin, N);*/
+				/*cout << "\ntemp: "<<temp<<endl;*/
+				cout << "#";
+				//print_sign_mat(spin, N);
 			}
-			cout << "\ntemp: " << temp << endl;
-			print_sign_mat(spin, N);
+			//cout << "\ntemp: " << temp << endl;
+			//print_sign_mat(spin, N);
 			//cluster call
 			//clustering(spin);
 			mag = 0;
@@ -177,10 +173,21 @@ int monte_carlo_simulation(void)
 			////cout << mag << endl;
 			//LogFile << "kconfig" << "\t" << "temp" << "\t" << "\t" << "mag / NS" << "\t" << "toten" << endl;
 			LogFile << kconfig << "\t" << temp << "\t" << "\t" << mag / NS << "\t" << tot_en << endl;
-			cout << "congif: "<<kconfig << "\t temp: " << temp << "\t mag: " <<mag<< "\t mag/site: " << mag / pow(LAT,2) << "\t tot_en: " << tot_en << endl;
+			cout	<< "\n\ncongif: "<<kconfig
+					<< "\t temp: " << temp
+					<< "\t mag: " <<mag
+					<< "\t mag/site: "<< mag / pow(LAT,2)
+					<< "\t tot_en: " << tot_en//<<","<<cal_total_energy(spin,phi)
+					<< "\t max_en: "<<max_energy()
+					<< "\n straight flips: "<<st_flips
+					<< "\t prob flips: "<<pr_flips
+					<< "\t rejections : " << rejec//float(st_flips)/float(pr_flips)
+					<< "\t tot flips: " << st_flips + pr_flips + rejec
+					<< endl;
 			magnat.push_back(mag/(NS-2));
 			file << abs(mag / pow((N - NDIM), 2)) << "\n";
 		}
+		st_flips = 0; pr_flips = 0,rejec=0;
 		//int clusters = hoshen_kopelman(matrix, N,N);
 
 		f200.open("spin_mat_2" + to_string(kconfig) + ".txt", ofstream::out);
@@ -211,7 +218,7 @@ int monte_carlo_simulation(void)
 	PhiMat.close();
 	SpinMat.close();
 	//printmat(phi);
-	//cout << "flips\t" << flip << "\t" << endl;
+	//cout << "st_flips\t" << flip << "\t" << endl;
 	//printmat(site_en);
 	//printmat1(spin);
 	return 0;
