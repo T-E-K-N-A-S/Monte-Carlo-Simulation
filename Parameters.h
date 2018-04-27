@@ -5,7 +5,7 @@
 #define V			N+2     // source + width of edge matrix + sink
 
 // new
-#define LAT 20		/*	lattice size			*/
+#define LAT 15		/*	lattice size			*/
 #define N LAT+2			/*	augumented lattice size	*/
 #define NDIM 2			/*	dimension of lattice	*/
 #define NS pow(LAT,NDIM)	/*	*/
@@ -13,7 +13,7 @@
 
 /*	MC	*/
 #define TEMP 10
-#define MEAS 10
+#define MEAS 15 
 #define SKIP 500
 
 /*	cluster	*/
@@ -23,7 +23,7 @@
 #define MIN(X,Y) ((X) < (Y) ? (X) : (Y))
 
 //delta is multipling factor with Bmat
-#define delta		0
+#define delta		1
 #define del_beg     .7
 #define del_end     1.2
 #define del_inc     .1

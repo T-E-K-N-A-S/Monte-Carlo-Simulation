@@ -9,7 +9,7 @@ using namespace std;
 int monte_carlo_simulation(void)
 {
 	cout << "***** SIMULATED ANNEALING *****" << endl;
-	cout << "Lattice size: " << N-2 << endl;
+	cout << "Lattice size: " << LAT << endl;
 
 	/* variables */
 	int iseed,

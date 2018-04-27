@@ -15,5 +15,5 @@ void printCluster(std::vector<std::vector<int> >& lat, std::vector <int>& clusst
 //
 long no_of_clusters(std::vector <int>& clusstats0, std::vector <int>& clusstats1);
 
-//
+// 
 float rms_mag(std::vector <int> & visited);

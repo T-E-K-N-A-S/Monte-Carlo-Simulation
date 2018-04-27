@@ -1,6 +1,6 @@
 #include "Headers.h"
 #include "Parameters.h" // >> contains all the req parameters
-
+ 
 void create_Bmat_bimodal(std::vector <float>& Bmat,float del)
 {
 	long i = 0, var = 0, count1 = 0, count2 = 0;

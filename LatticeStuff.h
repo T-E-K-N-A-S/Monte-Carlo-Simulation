@@ -1,5 +1,5 @@
 #pragma once
-
+  
 #include "Headers.h"
 
 void create_Bmat_bimodal(std::vector <float>& Bmat,float del);
@@ -7,7 +7,7 @@ void create_Bmat_bimodal(std::vector <float>& Bmat,float del);
 void update_Bmat_bimodal(std::vector <float>& Bmat, float del);
 
 void create_Bmat_gaussian(std::vector <float>& Bmat, float del);
-
+ 
 void create_Exmat(std::vector < std::vector <int> >& Exmat, std::vector <int> & latt);
 
 void create_CapacityMat(std::vector < std::vector <float> >& CapacityMat, std::vector < std::vector <int> >& Exmat);

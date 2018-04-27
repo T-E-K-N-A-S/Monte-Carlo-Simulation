@@ -177,7 +177,7 @@ void flip(std::vector<std::vector<int>>& spin, int i, int j)
 	spin[i][j] *= -1;
 }
 
-float metropolis(std::vector<std::vector<int>>& spin,float del_en, float beta,int i,int j)
+float metropolis(std::vector<std::vector<int>>& spin,float del_en, float beta,int i,int j,int& pr_flips,int &rej)
 {
 	float rand_var = uniformdist();			// uniform
 	float boltz = exp(-del_en*beta);		// boltzman
@@ -189,10 +189,22 @@ float metropolis(std::vector<std::vector<int>>& spin,float del_en, float beta,in
 		en = del_en;
 		flip(spin, i, j);
 		//site_energy = update_HE(phi, i_c, j_c, site_energy, spin);	// update site energy
-		//flips++;
+		pr_flips++;
 		return en;
 	}
-	return en;
+	else
+	{
+		//std::cout << "rejection "  << std::endl;
+		rej++;
+		return 0;
+	}
+	
+}
+
+int max_energy()
+{
+	int max = LAT *LAT * 2;
+	return max;
 }
 ///  Stores site energy which corresponds to 4 neighbours in    site_en[][]
 std::vector <std::vector <float> > siteEnergy(int n, std::vector <std::vector <int> >& spin, std::vector <std::vector <float> >& phi, std::vector <std::vector <float> >& site_en)
@@ -276,6 +288,19 @@ std::pair <int, int> generate_random_lattice_point()
 
 
 float sum_of_matrix(std::vector<std::vector<float> >& M)
+{
+	float sum = 0;
+	for (int i = 0; i < M.size(); i++)
+	{
+		for (int j = 0; j < M[i].size(); j++)
+		{
+			sum += M[i][j]; // error: may be spin mat
+		}
+	}
+	return sum;
+}
+
+int sum_of_matrix(std::vector<std::vector<int> >& M)
 {
 	float sum = 0;
 	for (int i = 0; i < M.size(); i++)

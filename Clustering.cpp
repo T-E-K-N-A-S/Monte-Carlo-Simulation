@@ -1,12 +1,12 @@
 #include "Headers.h"
 #include "Parameters.h" // >> contains all the req parameters
-
+ 
 //*
 //*  A DFS based function to find all reachable vertices from s.
 //*/
 void dfs(std::vector <std::vector <float> >& F, long s, std::vector <int>& visited)
 {
-	visited[s] = true;
+	visited[s] = true; 
 	for (long i = 0; i < NS; i++)
 	{
 		if (F[s][i] && !visited[i])
