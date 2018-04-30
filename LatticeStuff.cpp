@@ -209,9 +209,6 @@ void savedata(std::vector< int > & Mat,int l,float del,std::string s)
 }
 
 
-
-
-
 void savedata(std::vector< float > & Mat, int l, float del, std::string s)
 {
 	int w = int(del * 10);
