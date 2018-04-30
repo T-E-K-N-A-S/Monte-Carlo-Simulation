@@ -63,7 +63,11 @@ void create_spin_mat( std::vector<std::vector<int> >& spin)
 		for (int j = 1; j < N - 1; j++)
 		{
 			a = 2 * uniformdist() - 1;
+<<<<<<< HEAD
+			if (a>0)
+=======
 			if (a<0)
+>>>>>>> e56e69960232e781f6e2c357b918b5de67b5dc4d
 			{
 				spin[i][j] = -1;
 			}
@@ -154,7 +158,8 @@ float cal_total_energy(std::vector<std::vector<int>>& spin, std::vector<std::vec
 
 		}
 	}
-
+	//std::cout << "partial_enA : "<< partA << std::endl ;
+	//std::cout << "partial_enB :" << partB/2 << std::endl;
 	tot_en = partA + partB / 2;
 	//tot_en_st = tot_en / (LAT*LAT);  /// error -solved ; old: tot_en/n*n
 									 ////cout << "toten" << tot_en<< endl;
