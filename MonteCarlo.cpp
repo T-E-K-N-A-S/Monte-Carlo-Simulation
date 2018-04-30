@@ -63,11 +63,7 @@ void create_spin_mat( std::vector<std::vector<int> >& spin)
 		for (int j = 1; j < N - 1; j++)
 		{
 			a = 2 * uniformdist() - 1;
-<<<<<<< HEAD
 			if (a>0)
-=======
-			if (a<0)
->>>>>>> e56e69960232e781f6e2c357b918b5de67b5dc4d
 			{
 				spin[i][j] = -1;
 			}
